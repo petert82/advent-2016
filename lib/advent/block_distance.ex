@@ -3,6 +3,15 @@ defmodule Advent.BlockDistance do
   Day 1
   """
   
+  @doc """
+  Takes a string containing directions and calculates how far away the endpoint of following those
+  directions is in city block distance.
+  
+  For example:
+  
+    iex> Advent.BlockDistance.from_directions("R2, L3")
+    5
+  """
   def from_directions(directions) do
     String.split(directions, ", ")
     |> Enum.map(&parse_direction/1)
