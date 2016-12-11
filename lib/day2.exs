@@ -7,5 +7,7 @@ DDDLRURUDRRRURUUDLRLRDULDRDUULRURRRUULUDULDDLRRLLRLDDLURLRUDRLRRLRDLRLLDDLULDLRR
 """
 
 code = Advent.Keypad.get_code(instructions)
+IO.puts "The bathroom code is #{code} using a normal keypad"
 
-IO.puts "The bathroom code is #{code}"
+real_code = Advent.Keypad.get_code_for_weird_keypad(instructions)
+IO.puts "The bathroom code is #{real_code} using the star-shaped keypad"
