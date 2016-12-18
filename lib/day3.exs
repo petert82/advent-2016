@@ -1601,4 +1601,7 @@ maybe_triangles = """
 """
 
 possible_count = Advent.TriangleDetector.count_possible(maybe_triangles)
-IO.puts "There are #{possible_count} possible triangles in the input"
+IO.puts "There are #{possible_count} possible triangles in the input (when looking at rows)"
+
+col_possible_count = Advent.TriangleDetector.count_possible_by_col(maybe_triangles)
+IO.puts "There are #{col_possible_count} possible triangles in the input (when looking at columns)"
