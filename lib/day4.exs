@@ -950,3 +950,7 @@ zsxyfgqj-hqfxxnknji-idj-xytwflj-359[jxfin]
 
 real_sector_sum = Advent.RoomName.sum_real_sector_ids(room_names)
 IO.puts "The sum of the real sector IDs is #{real_sector_sum}"
+
+IO.puts "The real rooms have these names: "
+Advent.RoomName.decrypt_real_rooms(room_names)
+|> Enum.map(&( IO.puts("#{&1.sector_id}: #{&1.decrypted_name}") ))

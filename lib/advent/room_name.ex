@@ -1,5 +1,5 @@
 defmodule Advent.RoomName do
-  defstruct name: "", sector_id: 0, checksum: "" 
+  defstruct name: "", sector_id: 0, checksum: "", decrypted_name: ""
   
   @doc ~S"""
   Sums the sector IDs of all real rooms in the given list of encrypted room names.
@@ -8,11 +8,26 @@ defmodule Advent.RoomName do
     1514
   """
   def sum_real_sector_ids(rooms) do
+    get_real_rooms(rooms)
+    |> Enum.reduce(0, fn (r, sum) -> sum + r.sector_id end)
+  end
+  
+  @doc """
+  Decrypts the names of all of the real rooms in the given list of encrypted room names.
+  
+    iex> Advent.RoomName.decrypt_real_rooms("qzmt-zixmtkozy-ivhz-343[zimth]")
+    [%Advent.RoomName{name: "qzmt-zixmtkozy-ivhz", sector_id: 343, checksum: "zimth", decrypted_name: "very encrypted name"}]
+  """
+  def decrypt_real_rooms(rooms) do
+    get_real_rooms(rooms)
+    |> Enum.map(&decrypt/1)
+  end
+  
+  defp get_real_rooms(rooms) do
     String.split(rooms)
     |> Enum.map(&parse/1)
     |> Enum.filter(fn r -> r != nil end)
     |> Enum.filter(&is_real/1)
-    |> Enum.reduce(0, fn (r, sum) -> sum + r.sector_id end)
   end
   
   @doc ~S"""
@@ -60,6 +75,27 @@ defmodule Advent.RoomName do
     
     calc_checksum == checksum
   end
+  
+  @doc """
+  Decrypts the name of the given room
+  
+    iex> Advent.RoomName.decrypt(%Advent.RoomName{name: "qzmt-zixmtkozy-ivhz", sector_id: 343})
+    %Advent.RoomName{name: "qzmt-zixmtkozy-ivhz", sector_id: 343, decrypted_name: "very encrypted name"}
+  """
+  def decrypt(%__MODULE__{name: name, sector_id: sector_id} = room) do
+    # The sector ID gives us how far through the alphabet we need to shift each letter in the name
+    shift_by = rem(sector_id, 26)
+    
+    decrypted = String.codepoints(name)
+    |> Enum.map(fn (c) -> decrypt_char(c, shift_by) end)
+    |> Enum.join
+    
+    %{ room | decrypted_name: decrypted}
+  end
+  
+  defp decrypt_char("-", _), do: " "
+  defp decrypt_char(<< c >>, shift_by) when (c + shift_by) > 122, do: << (c + shift_by) - 26 >>
+  defp decrypt_char(<< c >>, shift_by), do: << c + shift_by >>
   
   defp count_letters_in(name) do
     String.replace(name, "-", "")
