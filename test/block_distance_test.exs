@@ -1,5 +1,5 @@
 defmodule Advent.BlockDistanceTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest Advent.BlockDistance
 
   test "calculates block distance" do
